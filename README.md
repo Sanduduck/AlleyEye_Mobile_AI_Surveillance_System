@@ -2,6 +2,7 @@
 
 ### 객체 탐지 기반 드론 감시 시스템 — 대회 제출용 (팀 코드톡톡)
 ### 배포 사이트 : https://sanduduck.github.io/Creative-Problem-Solving-Project/
+### 발표 영상 : https://youtu.be/EXQxIe49wd0?si=oCB2ey8aT9CxMtu7
 ---
 
 ## 📌 프로젝트 소개

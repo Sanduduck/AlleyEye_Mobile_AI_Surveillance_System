@@ -1,147 +1,219 @@
-# AlleyEye — 객체 탐지 기반 이동형 CCTV 감시 시스템
+# **AlleyEye**
 
-> 고정형 CCTV의 사각지대를 이동형 CCTV로 메우는 실시간 감시 프로토타입.
-> AI 객체 탐지 · 웹 관제 대시보드 · 자체 암호화 툴을 하나의 시스템으로 통합했습니다.
+### 객체 탐지 기반 이동형 CCTV 감시 시스템 — 대회 제출용 (팀 코드톡톡)
 
-![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-000000?style=flat&logo=flask&logoColor=white)
-![YOLO](https://img.shields.io/badge/YOLOv5n-00FFFF?style=flat&logo=yolo&logoColor=black)
-![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi%205-A22846?style=flat&logo=raspberrypi&logoColor=white)
-
-🔗 **데모** : https://sanduduck.github.io/Creative-Problem-Solving-Project/ &nbsp;|&nbsp; 🎬 **발표 영상** : https://youtu.be/EXQxIe49wd0
+**배포 사이트** : https://sanduduck.github.io/Creative-Problem-Solving-Project/
+**발표 영상** : https://youtu.be/EXQxIe49wd0?si=oCB2ey8aT9CxMtu7
 
 ---
 
-## 한눈에 보기
+## 📌 프로젝트 소개
 
-| | |
-| --- | --- |
-| **무엇** | 이동형 CCTV가 자율 순찰하며 사람을 탐지·추적하고, 웹/앱에서 실시간 관제하는 감시 시스템 |
-| **왜** | 서울은 세계 2위 CCTV 밀도(1제곱마일당 618대)임에도 사각지대 범죄가 지속. 이동형 감시로 공백을 보완 |
-| **핵심 기술** | YOLOv5n 객체 탐지(추론은 Colab GPU로 분리) · MJPEG 실시간 스트리밍 · AES-256-GCM 암호화 + 자체 스테가노그래피 |
-| **구성** | 라즈베리파이 5 + 카메라 2대 + 모터 (H/W) &nbsp;/&nbsp; Flask + 정적 웹·앱 (S/W) |
-| **실증** | RC카 프로토타입 (드론은 동일 구조 확장 대상) |
-| **기간 / 형태** | 2025.05 ~ 2026.01 · 4인 팀 프로젝트 (창의문제해결프로젝트&U7Makers 제출작) |
+* 고정형 CCTV의 사각지대를 보완하는 **이동형 CCTV 기반 실시간 감시 프로토타입**입니다. (실증 플랫폼: RC카 → 드론 확장 대상)
+* **배경:** 서울은 1제곱마일당 618대의 CCTV로 세계 2위 밀도임에도 사각지대를 노린 범죄가 지속되고 있으며, 창원시 도심 공원의 약 55%가 CCTV 사각지대로 방치되어 있습니다. 이동형 감시로 이 공백을 메우는 것이 목표입니다.
+* 실시간 스트림 관제(지도 + 이미지 스트림), 캡처·녹화, 클라이언트 측 암호화(.venc), 스테가노그래피 기반 키 표현 기능을 포함합니다.
+* 창의문제해결 경진대회(심사용) 제출용으로 **간결·직관적 시연**에 초점을 맞춘 데모 저장소입니다.
+* 로컬 정적 서버(HTTP)로 실행하여 심사요청 흐름을 즉시 시연할 것을 권장합니다.
 
 ---
 
-## 👤 내 역할 (박동진, 팀장)
+## 📖 목차
 
-프로젝트 기술 설계를 총괄하고, 소프트웨어 전반을 직접 구현했습니다.
-
-- **Colab 추론 연동 / 서버 구조 설계** — 라즈베리파이 단일 처리의 연산 병목을 분석하고, YOLOv5n 추론을 외부 GPU(Google Colab)로 분리하는 구조를 설계·연동했습니다.
-- **암호화 툴 개발** — AES-256-GCM + PBKDF2 기반 파일 암·복호화와, 비밀번호를 자연어 문장으로 변환하는 **자체 스테가노그래피 알고리즘**을 직접 설계·구현했습니다.
-- **웹/앱 프론트엔드 전반** — 로그인·CAPTCHA·관제 대시보드·암호화 도구까지 전 페이지의 UI와 클라이언트 로직을 담당했습니다.
+1. [팀원 구성](#팀원-구성)
+2. [개발 기간 & 담당](#-개발-기간)
+3. [사용 기술](#️-사용-기술)
+4. [주요 기능](#-주요-기능)
+5. [🧠 기술적 의사결정](#-기술적-의사결정-technical-decisions) ← *왜 이 기술을 선택했는가 (6건)*
+6. [프로젝트 구조](#-프로젝트-구조-권장)
+7. [결과 스크린샷](#-결과-시연용-스크린샷--기능도)
+8. [스테가노그래피 & 암호화 상세](#-스테가노그래피자체-제작-알고리즘--암호화--기술-상세)
+9. [파일별 역할](#-파일별-역할-간단-정리)
+10. [FAQ](#-자주-발생하는-문제-faq)
 
 ---
 
-## 🎯 주요 기능
-
-| 페이지 | 기능 |
-| --- | --- |
-| **로그인 / CAPTCHA** | 해시+솔트 기반 인증, Canvas 자체 CAPTCHA, 관리자/뷰어 권한 분리 |
-| **관제 대시보드** | Leaflet 지도에 장치 마커 표시, MJPEG 실시간 스트림 뷰어, 프레임 캡처 & 녹화 |
-| **암호화 툴** | 캡처 파일 AES-256-GCM 암·복호화(.venc), 비밀번호 ↔ 문장 스테가 변환 |
-| **객체 탐지 (H/W)** | YOLOv5n으로 `person` 탐지 → 인식된 대상 자동 추적 (모터 제어) |
-
-<br>
+## 팀원 구성
 
 <div align="center">
 
-**관제 대시보드**
-<img width="800" alt="cctv" src="https://github.com/user-attachments/assets/4898d66d-e45d-4a85-a901-04c7c99c92c9" />
-
-**암호화 & 스테가 툴**
-<img width="800" alt="en-decode" src="https://github.com/user-attachments/assets/c335d74b-5a61-4cea-a5ba-df00532f7120" />
-
-<sub>더 많은 화면은 아래 <a href="#-전체-스크린샷">전체 스크린샷</a>에서 확인할 수 있습니다.</sub>
+|                                                           **팀장: 박동진**                                                          |                                                           **이승헌**                                                           |                                                        **오유진**                                                        |                                                                **김준영**                                                               |
+| :----------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------: |
+| [<img src="https://avatars.githubusercontent.com/Sanduduck" height=120 width=120> <br/> @Sanduduck](https://github.com/Sanduduck) | [<img src="https://avatars.githubusercontent.com/lico0531" height=120 width=120> <br/> @lico0531](https://github.com/lico0531) | [<img src="https://avatars.githubusercontent.com/5u0612" height=120 width=120> <br/> @5u0612](https://github.com/5u0612) | [<img src="https://avatars.githubusercontent.com/Urban-Potato-717" height=120 width=120> <br/> @Urban-Potato-717](https://github.com/Urban-Potato-717) |
 
 </div>
 
 ---
 
-## 🛠️ 기술적으로 신경 쓴 점
+## 📅 개발 기간
 
-제한된 하드웨어(라즈베리파이 5) 위에서 실시간성·안정성을 확보하기 위해 아래와 같은 문제를 해결했습니다. *(자세한 배경은 각 항목을 펼쳐서 확인)*
+* 25/05/25 \~ 진행중 (대회 제출용 브랜치 기준)
 
-**⚡ 연산 병목 → 추론 오프로딩**
-객체 탐지와 모터 제어를 라파에서 동시에 돌리자 서보모터가 멈추는 문제 발생 → **AI 추론을 Google Colab(GPU)으로 분리**하고 라파는 제어·전송에 집중.
+### 👨‍💻 개발 담당
 
-**📷 카메라 1대의 한계 → 2대 운용**
-한 카메라로 추론 전송과 웹 스트리밍을 겹치니 성능 저하 → **웹캠을 추가해 역할 분리**(추론용 / 스트리밍용).
+* **박동진 (팀장)** — 기술 설계 총괄 · Colab 추론 연동/서버 구조 · AES+스테가 암호화 툴 · 웹/앱 프론트엔드 전반
+* **이승헌** — H/W·IoT (라즈베리파이·모터 제어), 관련 기술 조사·설계
+* **오유진** — 기획·아이디어 구체화, 기술 조사, 발표 자료
+* **김준영** — 보고서 작성, 기술 조사, 시각 자료
 
-**🔐 보안 → 표준 암호화 + 자체 알고리즘**
-AES-256-GCM(무결성 보장) + PBKDF2로 키 강화, 여기에 **비밀번호를 자연어 문장으로 바꾸는 스테가노그래피를 직접 설계**해 전달성과 공격 저항성을 함께 확보.
+---
+
+## 🛠️ 사용 기술
+
+* **H/W:** Raspberry Pi 5, CSI 카메라 · 웹캠, 서보/DC 모터 + 모터 드라이버, 초음파 센서
+* **AI/영상 처리:** YOLOv5n (COCO 모델, `person` 탐지) + OpenCV, 추론은 Google Colab(GPU)로 분리
+* **Backend:** Python (Flask)
+* **Frontend:** HTML / CSS / JavaScript (웹·앱 공통), 앱은 Expo
+* **Data:** JSON 기반 정적 데이터 (사용자·지역·장치 정보), 비밀번호는 해시+솔트 처리
+* **실증 플랫폼:** RC카 (프로토타입) → 드론은 동일 구조 확장 대상
+
+---
+
+## 🎯 주요 기능
+
+* **회원가입 / 로그인 / 권한 분기 (관리자/뷰어)** — 해시+솔트 기반 인증
+* **CAPTCHA (info.html)** — Canvas 기반 사용자 검증 흐름 (3회 실패 시 초기화)
+* **관제 대시보드 (cctv.html)**
+  * Leaflet 지도에 장치 마커 표시
+  * 지역별 장치 추가/삭제(관리자 전용)
+  * MJPEG 이미지 스트림 뷰어, 프레임 캡처, 클라이언트 녹화(MediaRecorder)
+  * 캡처/녹화 파일 → AES-GCM 암호화(.venc)로 저장
+* **암호화 & 스테가툴 (en-decode.html)**
+  * AES-GCM(256) + PBKDF2-SHA256(기본 310k iter) 기반 암/복호화
+  * 스테가노그래피: 비밀번호 ↔ 사람이 읽기 쉬운 문장(가역/비가역 모드) 변환
+* **객체 탐지 & 자동 추적 (H/W)** — YOLOv5n으로 `person` 탐지 → 인식된 대상 자동 추적(모터 제어)
+* **스트림 테스트 (screen.html)** — 로컬/내부 네트워크 MJPEG 스트림 테스트 페이지
+
+---
+
+## 🧠 기술적 의사결정 (Technical Decisions)
+
+단순히 "무엇을 썼는가"보다 **왜 그것을 선택했는가**를 기록합니다. 각 항목은 하드웨어·성능 제약과 트레이드오프를 근거로 결정되었습니다.
 
 <details>
-<summary><b>🔍 기술적 의사결정 상세 보기 (문제 → 해결 → 트레이드오프)</b></summary>
+<summary><b>1. AI 추론 위치 — 왜 라즈베리파이가 아닌 Colab에서 추론하는가</b></summary>
 
 <br>
 
-### 1. AI 추론 위치 — 왜 라즈베리파이가 아닌 Colab에서 추론하는가
+**문제**
+CSI 카메라로 받은 실시간 영상을 YOLOv5n으로 처리했는데, **모든 연산(객체 탐지 + 모터 제어)을 라즈베리파이 5 단일 장치에서 수행**하니 CPU 성능 한계로 과부하가 걸렸습니다. 그 결과 영상이 끊기고, **객체 탐지 연산 중에는 서보모터 제어가 멈추거나 버벅이는** 동시성 문제가 발생했습니다.
 
-**문제** — CSI 카메라 영상을 YOLOv5n으로 처리하며 **객체 탐지 + 모터 제어를 라파 5 단일 장치에서 수행**하니 CPU 과부하로 영상이 끊기고, 탐지 연산 중 서보모터 제어가 멈추는 동시성 문제가 발생했습니다.
+**분석**
+병목의 원인은 *연산 집약적인 AI 추론*과 *실시간 하드웨어 제어*가 한 장치의 CPU를 두고 경쟁하는 구조 자체였습니다.
 
-**해결** — 연산 집약적인 추론 모듈을 **외부 GPU(Google Colab)로 분리**. 라즈베리파이는 캡처·모터 제어·전송에 집중하고, Colab은 영상 스트림을 받아 추론 결과값만 반환하도록 구조화했습니다.
+**선택한 구조 — 추론 오프로딩**
+연산 집약적인 객체 탐지 모듈을 **외부 GPU 자원(Google Colab)으로 분리**했습니다.
+* **라즈베리파이(Edge)** — 영상 캡처, 모터 제어, 웹 전송에 집중
+* **Colab(추론 서버)** — 영상 스트림을 받아 YOLOv5n 추론 후 **결과값만 반환**
 
-**트레이드오프** — 시스템 안정성·반응성이 향상된 대신, 추론이 네트워크에 의존하게 되었습니다.
+**결과 / 트레이드오프**
+라즈베리파이가 제어·전송에만 집중하게 되어 **시스템 안정성과 반응성**이 향상되었습니다. 대신 추론이 네트워크에 의존하게 되는 트레이드오프가 생겼습니다.
 
----
+</details>
 
-### 2. 카메라 구성 — 왜 2대인가
+<details>
+<summary><b>2. 카메라 구성 — 왜 카메라를 2대 썼는가</b></summary>
 
-**문제** — 추론을 Colab으로 분리한 뒤에도, **한 카메라로 (1) Colab 추론 전송 + (2) 웹 실시간 스트리밍을 동시에** 처리하려니 인코딩·전송 부하가 겹쳐 양쪽 품질이 떨어졌습니다.
+<br>
 
-**해결** — 동일 방향을 촬영하는 **웹캠을 추가해 2대로 역할 분리**. CSI 카메라는 추론 서버 전송용, 웹캠은 웹 스트리밍용.
+**문제**
+추론을 Colab으로 분리한 뒤에도, **하나의 카메라 모듈로 (1) Colab 추론 서버 전송과 (2) 웹사이트 실시간 스트리밍을 동시에** 처리하려니 다시 성능 문제가 발생했습니다.
 
-**트레이드오프** — 하드웨어 1개를 추가하는 비용으로 소프트웨어 병목을 해소한 실용적 선택.
+**검토**
+단일 카메라의 프레임을 두 경로로 분기하는 방식은 인코딩·전송 부하가 겹쳐 양쪽 모두 품질이 떨어졌습니다.
 
----
+**해결**
+동일 방향을 촬영하는 **웹캠을 추가해 카메라 2대를 운용**하고, 역할을 물리적으로 분리했습니다.
+* **CSI 카메라** → 추론 서버(Colab) 전송용
+* **웹캠** → 웹서버 스트리밍용
 
-### 3. 영상 전송 방식 — 왜 MJPEG인가
+**결과**
+두 기능이 서로 간섭하지 않게 되어 **추론과 스트리밍을 동시에 안정적으로** 수행할 수 있었습니다. 하드웨어를 한 개 더 쓰는 비용으로 소프트웨어 병목을 해소한 실용적 선택이었습니다.
 
-**문제** — 저사양 라파에서 고화질 영상 인코딩과 AI 추론을 동시에 수행하자 프레임 저하·지연이 심했고, 원격 제어까지 얹으면 조작 지연이 컸습니다.
+</details>
 
-**해결** — 프레임별 JPEG를 HTTP로 연속 전송하는 **MJPEG** 채택. Flask에서 구현이 쉽고 브라우저 부담이 적어, 저사양에서도 안정적 스트리밍과 낮은 지연을 확보. 플러그인 없이 뷰잉·캡처 가능.
+<details>
+<summary><b>3. 영상 전송 방식 — 왜 MJPEG인가</b></summary>
 
-**트레이드오프** — 대역폭 효율은 H.264 등보다 낮지만, 구현 단순성과 저지연을 우선.
+<br>
 
----
+**문제**
+라즈베리파이의 성능 한계로 **고화질 영상 실시간 인코딩과 AI 추론을 동시에** 수행하자 심각한 프레임 저하·지연이 발생했습니다. 원격 제어까지 얹으면 지연(Latency)이 조작감을 해쳤습니다.
 
-### 4. 객체 탐지 모델 — 왜 YOLOv5n인가
+**검토한 대안**
 
-**문제** — 라파 5 기반의 제한된 자원에서, 오탐(낙엽·비·눈 등)을 줄이면서 사람만 정확히 탐지해야 했습니다.
+| 방식 | 특징 | 제약 |
+| --- | --- | --- |
+| 전체 영상 인코딩(H.264 등) | 대역폭 효율 우위 | 저사양 기기에서 인코딩 부하 큼 |
+| **MJPEG (프레임별 JPEG)** | 구현 단순, 클라이언트 부담 적음 | 대역폭 효율은 낮음 |
 
-**해결** — 경량 모델 **YOLOv5n**으로 실시간 추론을 확보하고, COCO 모델에서 **`person`(index 0)만 탐지**하도록 한정해 비인간 객체 오탐을 구조적으로 차단.
+**선택 이유**
+각 프레임을 JPEG로 압축해 HTTP 응답으로 연속 전송하는 **MJPEG**을 채택했습니다. Flask 등 웹 프레임워크에서 **구현이 쉽고**, 브라우저 측 부담이 적어 **저사양 하드웨어에서도 안정적인 스트리밍과 낮은 반응 지연**을 확보할 수 있었습니다. 별도 플러그인 없이 뷰잉·캡처가 가능한 점도 이점이었습니다.
 
-**트레이드오프** — 정확도를 일부 양보하는 대신 실시간성과 오탐 최소화를 확보. 간담회에서 제기된 "잦은 오탐" 우려에 `person` 한정 설계로 대응.
+</details>
 
----
+<details>
+<summary><b>4. 객체 탐지 모델 — 왜 YOLOv5n(nano)인가</b></summary>
 
-### 5. 암호화 — AES-256-GCM + 자체 스테가노그래피
+<br>
 
-**문제** — 캡처 파일을 안전하게 저장하고 비밀번호가 평문 노출되지 않으면서, 키를 전달·기억하기 쉽게 다뤄야 했습니다.
+**문제**
+이동형 CCTV의 연산 자원은 **Raspberry Pi 5** 기반으로 제한적이었고, 오탐(낙엽·비·눈 등)을 줄이면서 **사람만 정확히** 탐지해야 했습니다.
 
-**해결 (암호화)** — **AES-256-GCM**(기밀성 + 인증 태그로 무결성 보장) + **PBKDF2-SHA256 310k 반복**으로 짧은 비밀번호도 강한 키로 확장.
+**선택**
+* **경량 모델(nano)** — 제한된 엣지 환경에서 실시간 추론이 가능하도록 YOLOv5n을 채택했습니다.
+* **탐지 대상 한정** — COCO 모델에서 `person`(index 0)만 탐지하도록 설계해, 비인간 객체로 인한 오탐을 구조적으로 차단했습니다.
 
-**해결 (스테가노그래피, 자체 설계)** — 비밀번호를 **2비트 단위로 다국어 토큰에 매핑해 자연어 문장으로 변환**하는 알고리즘을 직접 구현. SHA-256 시드 PRNG·버킷 교차·반복 회피로 추측 난도를 높이고(표현 모드), 헤더(`"ST"|Len`)와 고정 매핑으로 원본 복원(가역 모드).
+**결과 / 트레이드오프**
+정확도를 일부 양보하는 대신 **실시간성**과 **오탐 최소화**를 확보했습니다. 중간 간담회에서 제기된 "군 시설 CCTV의 잦은 오탐" 우려에 대해, `person` 한정 설계로 대응할 수 있음을 근거로 제시했습니다.
 
-> **착안한 선행 연구** — *An improved hybrid image steganography method using AES algorithm* (Scientific Reports, 2025) 등. 해당 연구들은 LSB **이미지** 스테가 기반이며, 본 프로젝트는 그 결론("암호화+스테가 결합이 보안을 강화")에 착안해 **비밀번호↔문장 변환** 방식으로 독자 설계했습니다.
+</details>
 
-**트레이드오프** — 모든 암·복호화가 브라우저(클라이언트)에서만 수행돼 서버에 평문이 남지 않습니다. 실서비스에선 키 전달 경로·반복수·salt/iv 관리 정책 강화 필요.
+<details>
+<summary><b>5. 암호화 — AES-256-GCM + 자체 스테가노그래피 병행</b></summary>
 
----
+<br>
 
-### 6. 데이터 저장 — 왜 DB 서버 없이 JSON인가
+**문제**
+캡처·녹화 파일을 안전하게 저장하고, 비밀번호가 서버에 평문으로 노출되지 않아야 했습니다. 동시에 키(비밀번호)를 **전달·기억하기 쉬운 형태**로 다룰 필요가 있었습니다.
 
-**문제** — 초기엔 사용자·지역·장치 데이터를 JS 코드에 하드코딩 → 데이터·로직이 결합돼 유지보수가 어려웠습니다.
+**선택 — 암호화**
+* **AES-256-GCM** — 기밀성과 **무결성(인증 태그)** 을 함께 제공하는 AEAD 방식으로, 전송·저장 중 변조를 즉시 탐지할 수 있습니다.
+* **키 유도: PBKDF2-SHA256 (310,000 반복)** — 짧은 비밀번호도 강한 키로 확장하여 **무차별 대입·사전 공격에 대한 저항성**을 높였습니다.
 
-**해결** — 데이터를 **JSON으로 외부화**. 본 시스템은 모든 처리를 클라이언트에서 수행하는 **서버 독립형 아키텍처**를 지향하므로, 별도 DB를 두는 대신 정적 JSON으로 일관성을 유지하고 GitHub Pages 정적 배포까지 가능하게 했습니다.
+**선택 — 스테가노그래피 (자체 설계)**
+암호화와 스테가노그래피를 **함께 적용하면 보안성이 강화된다는 선행 연구**에 착안해, 비밀번호를 **2비트 단위로 다국어 토큰에 매핑하여 자연어 문장으로 변환**하는 알고리즘을 직접 설계·구현했습니다.
+* **표현 모드** — SHA-256 시드 기반 PRNG, 버킷 교차, 반복 회피, 구두점 장식으로 추측 난도를 높인 문장형 출력 생성
+* **가역 모드** — 헤더(`"ST"|Len`)와 고정 매핑으로 원본 비밀번호를 정확히 복원
+* 실제 암호 강도를 저하시키지 않으면서 **전달·기억·사회공학 공격 저항성**을 강화하는 보조 계층
 
-**트레이드오프** — 데모 규모엔 충분하나, 대규모 동시 쓰기·복잡한 쿼리가 필요한 실서비스에선 RDB/NoSQL 이관 필요.
+> **착안한 선행 연구**
+> * *An improved hybrid image steganography method using AES algorithm*, **Scientific Reports (Nature)**, 2025.
+> * *Cryptosystem for Secure Data Transmission using AES and Steganography*, 2019.
+>
+> ※ 위 연구들은 주로 LSB **이미지** 스테가노그래피 기반입니다. 본 프로젝트는 "암호화 + 스테가 결합이 단일 기법 대비 보안을 강화한다"는 결론에 착안하되, 이미지가 아닌 **비밀번호↔문장 변환** 방식으로 팀이 독자 설계했습니다.
+
+**결과 / 트레이드오프**
+모든 암·복호화가 **브라우저(클라이언트) 내에서만** 수행되어 민감 데이터가 서버에 평문으로 남지 않습니다. 실사용 시에는 키 전달 경로, 반복수, salt/iv 관리 정책을 추가로 강화해야 합니다.
+
+</details>
+
+<details>
+<summary><b>6. 계정 보안 — 비밀번호 평문 저장 위험을 어떻게 없앴는가</b></summary>
+
+<br>
+
+**문제**
+사용자 계정 관리 과정에서, 비밀번호를 **입력값 그대로 저장**하면 저장소가 유출됐을 때 모든 계정이 그대로 노출되는 치명적 위험이 있었습니다. 특히 무차별 대입 공격과 저장소 탈취 두 시나리오를 모두 방어해야 했습니다.
+
+**해결 — 2단계 방어**
+1. **단방향 해시 + 솔트** — 비밀번호를 원문이 아닌 해시 형태로 저장하고, 계정마다 무작위 솔트를 붙여 동일 비밀번호라도 다른 해시가 되도록 했습니다. 저장소가 유출돼도 원문 복원이 어렵고, 레인보우 테이블 공격도 무력화됩니다.
+2. **자체 스테가노그래피 계층 추가** — 여기에 더해, 팀이 직접 구현한 스테가노 알고리즘을 적용해 비인가 접근 시에도 중요 정보가 직접 노출되지 않도록 방어선을 한 겹 더 두었습니다.
+
+**추가 조치**
+로그인 실패가 일정 횟수 이상 누적되면 **계정을 잠금 처리**해 무차별 대입 공격을 차단했습니다.
+
+**결과 / 트레이드오프**
+저장소 유출·무차별 대입 두 위협 모두에 대응하는 구조를 확보했습니다. 다만 해시·스테가 처리로 인증 시 약간의 연산 비용이 추가되며, 실서비스에선 해시 반복수·솔트 관리 정책을 더 강화해야 합니다.
 
 </details>
 
@@ -160,71 +232,118 @@ AES-256-GCM(무결성 보장) + PBKDF2로 키 강화, 여기에 **비밀번호�
 
 ---
 
-## 📁 프로젝트 구조
+## 📂 프로젝트 구조 (권장)
 
 ```
-repo root
-├─ index/       인트로 페이지
-├─ main/        허브 / 소개 페이지
-├─ login/       회원가입 · 로그인 (해시+솔트)
-├─ info/        CAPTCHA 검증 페이지
-├─ cctv/        관제 대시보드 (지도 · 스트림 · 캡처/녹화 · 암호화)
-├─ en-decode/   암·복호화 & 스테가 도구
-├─ screen/      MJPEG 스트림 테스트
-├─ images/      스크린샷 · 기능도
-└─ docs/        보고서 · 발표 자료
+/ 📂(repo root)
+├─ README.md
+├─ 📂index                 # 인트로 페이지
+│   └─ index.html, index.css, index.js
+├─ 📂main                  # 허브 / 프로젝트 소개 페이지
+│   └─ main.html, main.css, main.js
+├─ 📂login                 # 회원가입 / 로그인 (해시+솔트)
+│   └─ login.html, login.css, login.js
+├─ 📂info                  # CAPTCHA 및 심사용 안내 페이지
+│   └─ info.html, info.css, info.js
+├─ 📂cctv                  # 관제 대시보드 (지도, 스트림, 캡처/녹화, 암호화)
+│   └─ cctv.html, cctv.css, cctv.js
+├─ 📂en-decode             # 암복호화 & 스테가 도구
+│   └─ en-decode.html, en-decode.css, en-decode.js
+├─ 📂screen                # 스트림 테스트 (MJPEG)
+│   └─ screen.html, screen.css, screen.js
+├─ 📂images/               # 모든 이미지(logo, 기능도, 스크린샷, etc)
+└─ 📂docs/                 # 제출 파일
+   └─ 최종 보고서.docx
+   └─ 최종 PPT.docx
+   └─ 최종 영상 제출.docx
 ```
+
+> **주의사항** — 모든 이미지는 `./images/`에 넣고 HTML에서 `./images/filename.png`로 참조하세요. (대소문자 구분)
 
 ---
 
-## 👥 팀 구성
+## 📷 결과 (시연용 스크린샷 / 기능도)
 
-<div align="center">
+### **index (인트로)**
+<img width="1920" height="1080" alt="index" src="https://github.com/user-attachments/assets/7a699b59-e770-4217-bf6c-9c5d97dc59d5" />
 
-| 팀장: 박동진 | 이승헌 | 오유진 | 김준영 |
-| :---: | :---: | :---: | :---: |
-| [<img src="https://avatars.githubusercontent.com/Sanduduck" height=100 width=100><br/>@Sanduduck](https://github.com/Sanduduck) | [<img src="https://avatars.githubusercontent.com/lico0531" height=100 width=100><br/>@lico0531](https://github.com/lico0531) | [<img src="https://avatars.githubusercontent.com/5u0612" height=100 width=100><br/>@5u0612](https://github.com/5u0612) | [<img src="https://avatars.githubusercontent.com/Urban-Potato-717" height=100 width=100><br/>@Urban-Potato-717](https://github.com/Urban-Potato-717) |
-| 기술 설계 · S/W 구현 · 발표 | 아이디어 · 기술 조사 · H/W | 기획 · 기술 조사 · 발표자료 | 보고서 · 기술 조사 · 시각자료 |
+### **main (허브)**
+<img width="1920" height="1080" alt="main-1" src="https://github.com/user-attachments/assets/9ba82681-7ebb-449c-89aa-347413ebb13c" />
+<img width="1920" height="1080" alt="main-2" src="https://github.com/user-attachments/assets/c1bdb499-3cfe-45b4-a9cf-185a9fe01fe2" />
+<img width="1920" height="1080" alt="main-3" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
-</div>
+### **login (회원가입 / 로그인 흐름) & info (보안 페이지)**
+<img width="1920" height="1080" alt="login-1" src="https://github.com/user-attachments/assets/23dffffd-5378-41e1-babe-833243a94c2f" />
+<img width="1918" height="1078" alt="login-2" src="https://github.com/user-attachments/assets/5d322584-6af2-4212-9c8e-e1f6d0ff5aff" />
+<img width="1920" height="1080" alt="info-1" src="https://github.com/user-attachments/assets/ed8988cd-7942-45da-aafa-565b7d262038" />
+<img width="1920" height="1080" alt="info-2" src="https://github.com/user-attachments/assets/2ca545e2-4781-46ec-91b6-c0e31fb35359" />
+
+### **cctv (관제 대시보드)**
+<img width="1920" height="1080" alt="cctv-1" src="https://github.com/user-attachments/assets/4898d66d-e45d-4a85-a901-04c7c99c92c9" />
+<img width="1920" height="1080" alt="cctv-2" src="https://github.com/user-attachments/assets/98c0551c-ffd5-4332-9142-0c9eca944cca" />
+<img width="1920" height="1080" alt="cctv-3" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
+
+### **en-decode (암/복호화 툴)**
+<img width="1920" height="1080" alt="en-decode-1" src="https://github.com/user-attachments/assets/c335d74b-5a61-4cea-a5ba-df00532f7120" />
+<img width="1920" height="1080" alt="en-decode-2" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
 
 ---
 
-## 📷 전체 스크린샷
+## 🧾 스테가노그래피(자체 제작 알고리즘) & 암호화 — 기술 상세
+
+### 암호화 요약
+
+* **대칭:** AES-GCM (256-bit)
+* **키 유도:** PBKDF2-SHA256 (기본 반복수: 310,000 — 데모/심사용)
+* **파일 포맷(.venc):** 고유 매직(`VIDENC01`) + 파라미터(alg id, iter, salt len, iv len, name/mime len) + salt + iv + 파일명/메타 + 암호문
+* **복호화:** 동일 비밀번호 필요, en-decode 도구에서 복호화 가능
+
+### 스테가노그래피 (팀 제작)
+
+* **목적:** 암호(또는 키)를 사람이 읽기 쉬운 문장(또는 단어열)로 변환해 전달성을 높임
+* **동작 모드:**
+  * **가역 (Reversible)**: 문장 ↔ 원래 비밀번호 상호 변환 가능 (심사/운영용)
+  * **비가역 (Irreversible)**: 문장에서 키만 파생, 원본 비밀번호는 복원 불가 (보안 지향)
+* **활용 예시:** 캡처 파일 암호화를 위해 운영자가 심사자에게 "가독 문장"으로 비밀번호 전달 → 심사자는 en-decode에서 동일한 문장으로 복호화 / 가역 모드 사용 권장
+* **보안 주의:** 실사용 시 키 관리(전달 경로), 반복수, salt/iv 관리 정책을 강화해야 함.
+
+---
+
+## 🔧 파일별 역할 (간단 정리)
+
+* `main.*` — 심사용 허브(소개 + 이동 버튼)
+* `login.*` — 로컬 회원가입/로그인 (해시+솔트)
+* `info.*` — CAPTCHA(사람 검증) / 심사용 플로우 연결
+* `cctv.*` — 관제 대시보드(지도, 스트림, 캡처/녹화, 암호화 저장)
+* `en-decode.*` — 암복호화 툴 + 스테가 전환 툴
+* `screen.*` — 스트림(MJPEG) 연결 테스트 페이지
+* `images/` — UI 리소스, 기능도, 스크린샷 등
+* `docs/` — 상세 보고서/발표 자료
+
+---
+
+## ❗ 자주 발생하는 문제 (FAQ)
 
 <details>
-<summary><b>펼쳐서 전체 화면 보기</b></summary>
+<summary><b>Q. 페이지를 폴더로 옮겼더니 이동이 안 됩니다.</b></summary>
 
-<br>
-
-**index (인트로)**
-<img width="800" alt="index" src="https://github.com/user-attachments/assets/7a699b59-e770-4217-bf6c-9c5d97dc59d5" />
-
-**main (허브)**
-<img width="800" alt="main-1" src="https://github.com/user-attachments/assets/9ba82681-7ebb-449c-89aa-347413ebb13c" />
-<img width="800" alt="main-2" src="https://github.com/user-attachments/assets/c1bdb499-3cfe-45b4-a9cf-185a9fe01fe2" />
-
-**login & info (인증 흐름)**
-<img width="800" alt="login-1" src="https://github.com/user-attachments/assets/23dffffd-5378-41e1-babe-833243a94c2f" />
-<img width="800" alt="info-1" src="https://github.com/user-attachments/assets/ed8988cd-7942-45da-aafa-565b7d262038" />
-
-**cctv (관제 대시보드)**
-<img width="800" alt="cctv-2" src="https://github.com/user-attachments/assets/98c0551c-ffd5-4332-9142-0c9eca944cca" />
-<img width="800" alt="cctv-3" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
-
-**en-decode (암/복호화 툴)**
-<img width="800" alt="en-decode-2" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
-
+HTML 내부의 `href`, `window.location.href`, 이미지 `src`는 **상대경로 기준**입니다. 파일 이동 시 경로(예: `../main.html`)를 수정하세요.
 </details>
 
 <details>
-<summary><b>실행 / 트러블슈팅 FAQ</b></summary>
+<summary><b>Q. 이미지가 보이지 않습니다.</b></summary>
 
-<br>
+`images/`에 파일이 있는지, 파일명·대소문자가 일치하는지 확인하세요.
+</details>
 
-- **페이지 이동이 안 됨** — `href`·`src`가 상대경로 기준이라 파일 이동 시 경로 수정 필요.
-- **이미지가 안 보임** — `images/` 내 파일명·대소문자 일치 확인.
-- **WebCrypto 오류** — `crypto.subtle`은 HTTPS 또는 localhost에서 동작. 로컬은 `http://localhost` 권장.
-- **스트림/캡처 실패** — 스트림 서버 CORS 헤더 필요. HTTPS 페이지에서 HTTP 스트림은 Mixed Content로 차단됨.
+<details>
+<summary><b>Q. WebCrypto/crypto.subtle 관련 오류가 발생합니다.</b></summary>
 
+`crypto.subtle.importKey` 등 WebCrypto 기능은 **HTTPS 환경(또는 localhost)** 에서 동작 권장합니다. 로컬 테스트는 `http://localhost`로 실행하거나 최신 브라우저 사용을 권장합니다.
+</details>
+
+<details>
+<summary><b>Q. 스트림(CORS) 또는 캡처가 실패합니다.</b></summary>
+
+스트림 서버에 `Access-Control-Allow-Origin` 헤더가 필요할 수 있습니다. 또는 HTTPS 페이지에서 HTTP 스트림을 불러오면 Mixed Content로 차단됩니다(HTTPS 페이지는 HTTP 스트림 차단).
 </details>

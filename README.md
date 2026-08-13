@@ -1,8 +1,10 @@
 # **AlleyEye**
 
 ### 객체 탐지 기반 드론 감시 시스템 — 대회 제출용 (팀 코드톡톡)
-### 배포 사이트 : https://sanduduck.github.io/Creative-Problem-Solving-Project/
-### 발표 영상 : https://youtu.be/EXQxIe49wd0?si=oCB2ey8aT9CxMtu7
+
+**배포 사이트** : https://sanduduck.github.io/Creative-Problem-Solving-Project/
+**발표 영상** : https://youtu.be/EXQxIe49wd0?si=oCB2ey8aT9CxMtu7
+
 ---
 
 ## 📌 프로젝트 소개
@@ -14,13 +16,28 @@
 
 ---
 
+## 📖 목차
+
+1. [팀원 구성](#팀원-구성)
+2. [개발 기간 & 담당](#-개발-기간)
+3. [사용 기술](#️-사용-기술)
+4. [주요 기능](#-주요-기능)
+5. [🧠 기술적 의사결정](#-기술적-의사결정-technical-decisions) ← *왜 이 기술을 선택했는가*
+6. [프로젝트 구조](#-프로젝트-구조-권장)
+7. [결과 스크린샷](#-결과-시연용-스크린샷--기능도)
+8. [스테가노그래피 & 암호화 상세](#-스테가노그래피자체-제작-알고리즘--암호화--기술-상세)
+9. [파일별 역할](#-파일별-역할-간단-정리)
+10. [FAQ](#-자주-발생하는-문제-faq)
+
+---
+
 ## 팀원 구성
 
 <div align="center">
 
 |                                                           **팀장: 박동진**                                                          |                                                           **이승헌**                                                           |                                                        **오유진**                                                        |                                                                **김준영**                                                               |
 | :----------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------: |
-| [<img src="https://avatars.githubusercontent.com/Sanduduck" height=120 width=120> <br/> @Sanduduck](https://github.com/Sanduduck) | [<img src="https://avatars.githubusercontent.com/lico0531" height=120 width=120> <br/> @lico053](https://github.com/lico0531) | [<img src="https://avatars.githubusercontent.com/5u0612" height=120 width=120> <br/> @5u0612](https://github.com/5u0612) | [<img src="https://avatars.githubusercontent.com/https://github.com/Urban-Potato-717" height=120 width=120> <br/> @Urban-Potato-717](https://github.com/Urban-Potato-717) |
+| [<img src="https://avatars.githubusercontent.com/Sanduduck" height=120 width=120> <br/> @Sanduduck](https://github.com/Sanduduck) | [<img src="https://avatars.githubusercontent.com/lico0531" height=120 width=120> <br/> @lico053](https://github.com/lico0531) | [<img src="https://avatars.githubusercontent.com/5u0612" height=120 width=120> <br/> @5u0612](https://github.com/5u0612) | [<img src="https://avatars.githubusercontent.com/Urban-Potato-717" height=120 width=120> <br/> @Urban-Potato-717](https://github.com/Urban-Potato-717) |
 
 </div>
 
@@ -30,9 +47,7 @@
 
 * 25/05/25 \~ 진행중 (대회 제출용 브랜치 기준)
 
----
-
-## 👨‍💻 개발 담당 (요약)
+### 👨‍💻 개발 담당 (요약)
 
 * **박동진 (팀장)** — BackEnd/FrontEnd 통합(웹앱 개발)
 * **이승헌** — H/W·IoT
@@ -43,12 +58,12 @@
 
 ## 🛠️ 사용 기술
 
-* H/W: Raspberry Pi v5 (드론/이동형 CCTV 프로토타입)
-* Backend: Flask · Node/React (데모 흐름 일부)
-* Frontend: HTML / CSS / JavaScript (심사용 정적 페이지)
-* ML: YOLOv8 (객체 탐지) — 모델은 대회 규정상 별도 제공 가능
-* Database: MongoDB (시연용 일부 로그 저장)
-* 통신: REST API, MQTT(HiveMQ) (필요 시), 외부 OAuth(Kakao) 연동 샘플
+* **H/W:** Raspberry Pi 5 (드론/이동형 CCTV 프로토타입)
+* **Backend:** Flask · Node/React (데모 흐름 일부)
+* **Frontend:** HTML / CSS / JavaScript (심사용 정적 페이지)
+* **ML:** YOLOv8n (nano) — 객체 탐지, COCO 사전학습 모델 기반 (모델은 대회 규정상 별도 제공 가능)
+* **Data:** JSON 기반 정적 데이터 (시연용 로그·설정)
+* **통신:** REST API, MQTT(HiveMQ) (필요 시), 외부 OAuth(Kakao) 연동 샘플
 
 ---
 
@@ -57,16 +72,105 @@
 * **회원가입 / 로그인 / 권한 분기 (관리자/뷰어)** — 클라이언트 localStorage 기반 데모
 * **CAPTCHA (info.html)** — Canvas 기반 사용자 검증 흐름
 * **관제 대시보드 (cctv.html)**
-
   * Leaflet 지도에 드론(장치) 마커 표시
   * 지역별 드론 추가/삭제(관리자 전용)
   * MJPEG 이미지 스트림 뷰어, 프레임 캡처, 클라이언트 녹화(MediaRecorder)
   * 캡처/녹화 파일 → AES-GCM 암호화(.venc)로 저장
 * **암호화 & 스테가툴 (en-decode.html)**
-
   * AES-GCM(256) + PBKDF2-SHA256(기본 310k iter) 기반 암/복호화
   * 스테가노그래피: 비밀번호 ↔ 사람이 읽기 쉬운 문장(가역/비가역 모드) 변환
 * **스트림 테스트 (screen.html)** — 로컬/내부 네트워크 MJPEG 스트림 테스트 페이지
+
+---
+
+## 🧠 기술적 의사결정 (Technical Decisions)
+
+단순히 "무엇을 썼는가"보다 **왜 그것을 선택했는가**를 기록합니다. 각 항목은 하드웨어·성능 제약과 트레이드오프를 근거로 결정되었습니다.
+
+<details>
+<summary><b>1. 객체 탐지 모델 — 왜 YOLOv8n(nano)인가</b></summary>
+
+<br>
+
+**문제**
+드론/이동형 CCTV 프로토타입의 연산 자원은 **Raspberry Pi 5** 한 대로 제한적이었고, 실시간 영상 처리와 객체 탐지를 동시에 수행해야 했습니다. 상위 버전 모델 사용 시 추론 지연과 버벅임이 발생했습니다.
+
+**검토한 대안**
+
+| 선택지 | 특징 | 제약 |
+| --- | --- | --- |
+| YOLOv8 (s/m/l) | 정확도 우위 | 라즈베리파이 5에서 추론 지연·버벅임 발생 |
+| **YOLOv8n (nano)** | 경량, 실시간 추론에 유리 | 정확도는 상위 버전 대비 소폭 하락 |
+
+**선택 이유**
+* **엣지 디바이스(라즈베리파이 5) 실시간성**을 최우선으로 두어, 프레임 처리 지연을 최소화할 수 있는 nano 버전을 채택했습니다.
+* YOLOv8 계열은 학습·배포 파이프라인과 문서가 잘 정리되어 있어 **학부 수준에서 재현·유지보수가 용이**했습니다.
+
+**결과 / 트레이드오프**
+정확도를 일부 양보하는 대신 제한된 하드웨어에서 **실시간 탐지 가능성**을 확보했습니다. 데모 환경에 적합한 균형점으로 판단했습니다.
+
+</details>
+
+<details>
+<summary><b>2. 실시간 추론 구조 — Edge–Cloud Inference Architecture</b></summary>
+
+<br>
+
+**문제**
+CCTV가 핵심 기능이므로 **영상 송출**과 **YOLO 기반 객체 탐지(COCO 모델)** 를 동시에 수행해야 했는데, 이를 라즈베리파이 한 곳에서 처리하니 **연산 병목**이 발생해 부하가 과도하게 걸렸습니다.
+
+**분석**
+라즈베리파이 5의 부하를 분석한 결과, *영상 처리 + AI 추론*을 단일 디바이스에서 병행하는 것이 병목의 직접적 원인이었습니다.
+
+**선택한 구조**
+연산을 역할별로 분리한 **Edge–Cloud Inference Architecture**를 적용했습니다.
+* **Edge (디바이스)** — 영상 스트림 송출 및 디바이스 제어 담당
+* **Inference (분리 계층)** — 객체 탐지 연산을 별도로 처리
+
+**결과 / 트레이드오프**
+AI 추론과 디바이스 제어를 분리함으로써 단일 디바이스의 부하 집중을 완화하고, **영상 송출의 실시간성**을 유지할 수 있었습니다. 스트림 전송에는 구현·호환성이 단순한 **MJPEG** 방식을 사용해 브라우저에서 별도 플러그인 없이 뷰잉·캡처가 가능하도록 했습니다.
+
+</details>
+
+<details>
+<summary><b>3. 데이터 저장 — 하드코딩 → JSON 분리</b></summary>
+
+<br>
+
+**문제**
+초기에는 데모 데이터를 JavaScript 코드 내부에 **하드코딩**하여 관리했습니다. 데이터와 로직이 뒤섞여 있어 수정·확장이 번거로웠습니다.
+
+**개선**
+데이터를 코드에서 분리해 **JSON 형태로 외부화**했습니다.
+
+**선택 이유 / 결과**
+* 로직과 데이터를 분리하여 **유지보수성**을 확보했습니다.
+* 별도 DB 서버 없이도 **정적 서버 기반 데모 흐름**을 유지할 수 있어, 심사·시연 환경에 적합했습니다.
+
+</details>
+
+<details>
+<summary><b>4. 암호화 — AES-GCM(256) + 스테가노그래피 병행</b></summary>
+
+<br>
+
+**문제**
+캡처·녹화 파일을 안전하게 저장하는 동시에, 키(비밀번호)를 **전달하기 쉬운 형태**로 다룰 필요가 있었습니다.
+
+**선택**
+* **AES-GCM (256-bit)** — 대칭키 암호화 중 기밀성과 **무결성 검증(AEAD)** 을 함께 제공하는 표준적이고 검증된 방식으로 채택했습니다. 키 유도는 PBKDF2-SHA256(기본 반복수 310,000)을 사용했습니다.
+* **스테가노그래피 병행** — 암호화와 스테가노그래피를 **함께 적용하면 보안성이 강화된다는 선행 연구**에 착안하여 두 기법을 결합했습니다. 비밀번호를 사람이 읽기 쉬운 문장으로 변환해 전달성을 높이는 동시에 키를 은닉했습니다.
+
+> **참고 문헌**
+> * S. B. et al., *An improved hybrid image steganography method using AES algorithm*, **Scientific Reports (Nature)**, 2025.
+> * *Cryptosystem for Secure Data Transmission using AES and Steganography*, 2019.
+>
+> ※ 위 연구들은 주로 LSB 이미지 스테가노그래피 기반이며, 본 프로젝트는 "암호화 + 스테가 결합이 단일 기법 대비 보안을 강화한다"는 결론에 착안해 **비밀번호↔문장 변환** 방식으로 자체 구현했습니다.
+
+**결과 / 트레이드오프**
+단일 암호화 대비 **키 전달 편의성과 은닉성**을 동시에 확보했습니다. 다만 실사용 시에는 키 전달 경로, 반복수, salt/iv 관리 정책을 추가로 강화해야 합니다.
+
+</details>
 
 ---
 
@@ -91,46 +195,43 @@
 │   └─ screen.html, screen.css, screen.js
 ├─ 📂images/               # 모든 이미지(logo, 기능도, 스크린샷, etc)
 └─ 📂docs/                 # 제출 파일
-   └─ 최종 보고서.docx            
+   └─ 최종 보고서.docx
    └─ 최종 PPT.docx
-   └─ 최종 영상 제출.docx 
+   └─ 최종 영상 제출.docx
 ```
----
-**주의사항**
 
-* 모든 이미지는 `./images/`에 넣고 HTML에서 `./images/filename.png`로 참조하세요. (대소문자 구분)
+> **주의사항** — 모든 이미지는 `./images/`에 넣고 HTML에서 `./images/filename.png`로 참조하세요. (대소문자 구분)
 
 ---
 
 ## 📷 결과 (시연용 스크린샷 / 기능도)
 
-# **index (인트로)** 
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/7a699b59-e770-4217-bf6c-9c5d97dc59d5" />
+### **index (인트로)**
+<img width="1920" height="1080" alt="index" src="https://github.com/user-attachments/assets/7a699b59-e770-4217-bf6c-9c5d97dc59d5" />
 
-# **main (허브)** 
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/9ba82681-7ebb-449c-89aa-347413ebb13c" />
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c1bdb499-3cfe-45b4-a9cf-185a9fe01fe2" />
-<img width="1920" height="1080" alt="main" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
+### **main (허브)**
+<img width="1920" height="1080" alt="main-1" src="https://github.com/user-attachments/assets/9ba82681-7ebb-449c-89aa-347413ebb13c" />
+<img width="1920" height="1080" alt="main-2" src="https://github.com/user-attachments/assets/c1bdb499-3cfe-45b4-a9cf-185a9fe01fe2" />
+<img width="1920" height="1080" alt="main-3" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
 
-# **login (회원가입 / 로그인 흐름) && info (보안 페이지)** 
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/23dffffd-5378-41e1-babe-833243a94c2f" />
-<img width="1918" height="1078" alt="Image" src="https://github.com/user-attachments/assets/5d322584-6af2-4212-9c8e-e1f6d0ff5aff" />
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/ed8988cd-7942-45da-aafa-565b7d262038" />
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/2ca545e2-4781-46ec-91b6-c0e31fb35359" />
-<img width="1920" height="1080" alt="login" src="https://github.com/user-attachments/assets/c173e6db-c673-460b-bb90-9995b0b7c19b" />
+### **login (회원가입 / 로그인 흐름) & info (보안 페이지)**
+<img width="1920" height="1080" alt="login-1" src="https://github.com/user-attachments/assets/23dffffd-5378-41e1-babe-833243a94c2f" />
+<img width="1918" height="1078" alt="login-2" src="https://github.com/user-attachments/assets/5d322584-6af2-4212-9c8e-e1f6d0ff5aff" />
+<img width="1920" height="1080" alt="info-1" src="https://github.com/user-attachments/assets/ed8988cd-7942-45da-aafa-565b7d262038" />
+<img width="1920" height="1080" alt="info-2" src="https://github.com/user-attachments/assets/2ca545e2-4781-46ec-91b6-c0e31fb35359" />
 
-# **cctv (관제 대시보드)** 
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/4898d66d-e45d-4a85-a901-04c7c99c92c9" />
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/98c0551c-ffd5-4332-9142-0c9eca944cca" />
-<img width="1920" height="1080" alt="cctv" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
+### **cctv (관제 대시보드)**
+<img width="1920" height="1080" alt="cctv-1" src="https://github.com/user-attachments/assets/4898d66d-e45d-4a85-a901-04c7c99c92c9" />
+<img width="1920" height="1080" alt="cctv-2" src="https://github.com/user-attachments/assets/98c0551c-ffd5-4332-9142-0c9eca944cca" />
+<img width="1920" height="1080" alt="cctv-3" src="https://github.com/user-attachments/assets/0fcf27e6-67d6-46d5-ba86-e6903e5e3ce1" />
 
-# **en-decode (암/복호화 툴)** 
-<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/c335d74b-5a61-4cea-a5ba-df00532f7120" />
-<img width="1920" height="1080" alt="en-decode" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
+### **en-decode (암/복호화 툴)**
+<img width="1920" height="1080" alt="en-decode-1" src="https://github.com/user-attachments/assets/c335d74b-5a61-4cea-a5ba-df00532f7120" />
+<img width="1920" height="1080" alt="en-decode-2" src="https://github.com/user-attachments/assets/075dcd6c-5347-41bf-9bac-57d1d8e33688" />
 
 ---
 
-## 🧾 스테가노그래피(자체 제작 알고리즘)  & 암호화 — 기술 상세 (추가)
+## 🧾 스테가노그래피(자체 제작 알고리즘) & 암호화 — 기술 상세
 
 ### 암호화 요약
 
@@ -139,14 +240,13 @@
 * **파일 포맷(.venc):** 고유 매직(`VIDENC01`) + 파라미터(alg id, iter, salt len, iv len, name/mime len) + salt + iv + 파일명/메타 + 암호문
 * **복호화:** 동일 비밀번호 필요, en-decode 도구에서 복호화 가능
 
-### 스테가노그래피(팀 제작)
+### 스테가노그래피 (팀 제작)
 
 * **목적:** 암호(또는 키)를 사람이 읽기 쉬운 문장(또는 단어열)로 변환해 전달성을 높임
 * **동작 모드:**
-
   * **가역 (Reversible)**: 문장 ↔ 원래 비밀번호 상호 변환 가능 (심사/운영용)
   * **비가역 (Irreversible)**: 문장에서 키만 파생, 원본 비밀번호는 복원 불가 (보안 지향)
-* **활용 예시:** 캡처 파일 암호화를 위해 운영자가 심사자에게 “가독 문장”으로 비밀번호 전달 → 심사자는 en-decode에서 동일한 문장으로 복호화 / 가역 모드 사용 권장
+* **활용 예시:** 캡처 파일 암호화를 위해 운영자가 심사자에게 "가독 문장"으로 비밀번호 전달 → 심사자는 en-decode에서 동일한 문장으로 복호화 / 가역 모드 사용 권장
 * **보안 주의:** 실사용 시 키 관리(전달 경로), 반복수, salt/iv 관리 정책을 강화해야 함.
 
 ---
@@ -160,29 +260,32 @@
 * `en-decode.*` — 암복호화 툴 + 스테가 전환 툴
 * `screen.*` — 스트림(MJPEG) 연결 테스트 페이지
 * `images/` — UI 리소스, 기능도, 스크린샷 등
-* `docs/최종 보고서 2차.docx` — 상세 보고서/발표 자료
+* `docs/` — 상세 보고서/발표 자료
 
 ---
 
 ## ❗ 자주 발생하는 문제 (FAQ)
 
-**Q. 페이지를 폴더로 옮겼더니 이동이 안 됩니다.**
+<details>
+<summary><b>Q. 페이지를 폴더로 옮겼더니 이동이 안 됩니다.</b></summary>
 
-* A: HTML 내부의 `href`, `window.location.href`, 이미지 `src`는 **상대경로 기준**입니다. 파일 이동 시 경로(예: `../main.html`)를 수정하세요.
+HTML 내부의 `href`, `window.location.href`, 이미지 `src`는 **상대경로 기준**입니다. 파일 이동 시 경로(예: `../main.html`)를 수정하세요.
+</details>
 
-**Q. 이미지가 보이지 않습니다.**
+<details>
+<summary><b>Q. 이미지가 보이지 않습니다.</b></summary>
 
-* A: `images/`에 파일이 있는지, 파일명·대소문자가 일치하는지 확인하세요.
+`images/`에 파일이 있는지, 파일명·대소문자가 일치하는지 확인하세요.
+</details>
 
-**Q. WebCrypto/crypto.subtle 관련 오류가 발생합니다.**
+<details>
+<summary><b>Q. WebCrypto/crypto.subtle 관련 오류가 발생합니다.</b></summary>
 
-* A: `crypto.subtle.importKey` 등 WebCrypto 기능은 \*\*HTTPS 환경(또는 localhost)\*\*에서 동작 권장합니다. 로컬 테스트는 `http://localhost`로 실행하거나 최신 브라우저 사용 권장.
+`crypto.subtle.importKey` 등 WebCrypto 기능은 **HTTPS 환경(또는 localhost)** 에서 동작 권장합니다. 로컬 테스트는 `http://localhost`로 실행하거나 최신 브라우저 사용을 권장합니다.
+</details>
 
-**Q. 스트림(CORS) 또는 캡처가 실패합니다.**
+<details>
+<summary><b>Q. 스트림(CORS) 또는 캡처가 실패합니다.</b></summary>
 
-* A: 스트림 서버에 `Access-Control-Allow-Origin` 헤더가 필요할 수 있습니다. 또는 HTTPS 페이지에서 HTTP 스트림을 불러오면 Mixed Content로 차단됩니다(HTTPS 페이지는 HTTP 스트림 차단).
-
----
-
-
-
+스트림 서버에 `Access-Control-Allow-Origin` 헤더가 필요할 수 있습니다. 또는 HTTPS 페이지에서 HTTP 스트림을 불러오면 Mixed Content로 차단됩니다(HTTPS 페이지는 HTTP 스트림 차단).
+</details>
